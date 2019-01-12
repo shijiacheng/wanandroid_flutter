@@ -6,6 +6,7 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import '../model/BannerModel.dart';
 import '../utils/timeline_util.dart';
 import 'WebViewPageUI.dart';
+import 'SearchPageUI.dart';
 ///
 /// 首页
 ///
@@ -58,6 +59,13 @@ class HomePageUIState extends State<HomePageUI> with AutomaticKeepAliveClientMix
       appBar: new AppBar(
         title: new Text("首页"),
         elevation: 0.0,
+        actions: <Widget>[
+          new IconButton(
+              icon: new Icon(Icons.search),
+              onPressed: () {
+                onSearchClick();
+              })
+        ],
       ),
       body: RefreshIndicator(
         onRefresh: getData,
@@ -157,6 +165,12 @@ class HomePageUIState extends State<HomePageUI> with AutomaticKeepAliveClientMix
         title: itemData.title,
         url: itemData.link,
       );
+    }));
+  }
+
+  void onSearchClick() async {
+    await Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
+      return new SearchPageUI(null);
     }));
   }
 
