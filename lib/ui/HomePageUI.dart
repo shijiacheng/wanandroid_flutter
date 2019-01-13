@@ -7,6 +7,7 @@ import '../model/BannerModel.dart';
 import '../utils/timeline_util.dart';
 import 'WebViewPageUI.dart';
 import 'SearchPageUI.dart';
+import 'DrawerWidgetUI.dart';
 ///
 /// 首页
 ///
@@ -67,6 +68,7 @@ class HomePageUIState extends State<HomePageUI> with AutomaticKeepAliveClientMix
               })
         ],
       ),
+
       body: RefreshIndicator(
         onRefresh: getData,
         child: ListView.separated(
@@ -81,6 +83,8 @@ class HomePageUIState extends State<HomePageUI> with AutomaticKeepAliveClientMix
           controller: _scrollController,
         ),
       ),
+
+      drawer: DrawerDemo(),
     );
   }
 
