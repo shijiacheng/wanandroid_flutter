@@ -83,7 +83,6 @@ class _NewsListState extends State<NewsList>{
   List<ProjectTreeListDatas> _datas  = new List();
   ScrollController _scrollController = ScrollController(); //listview的控制器
   int _page = 1; //加载的页数
-
   Dio dio;
 
   @override
@@ -99,7 +98,6 @@ class _NewsListState extends State<NewsList>{
       }
     });
   }
-
 
   Future<Null> getData() async{
     _page = 1;
@@ -135,7 +133,7 @@ class _NewsListState extends State<NewsList>{
   }
 
   Widget _itemView(BuildContext context, int index) {
-    return GestureDetector(
+    return InkWell(
       child:_newsRow(_datas[index]),
       onTap: (){
         _onItemClick(_datas[index]);
