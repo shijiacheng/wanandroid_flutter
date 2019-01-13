@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import '../model/SystemTreeModel.dart';
+import 'SystemTreeContentPageUI.dart';
 
+/// 知识体系页面
 class SystemTreeUI extends StatefulWidget{
   @override
   State<StatefulWidget> createState() {
     return SystemTreeUIState();
   }
-
 }
 
 class SystemTreeUIState extends State<SystemTreeUI>{
@@ -45,44 +46,58 @@ class SystemTreeUIState extends State<SystemTreeUI>{
     );
   }
 
+  void _onItemClick(SystemTreeData itemData) async {
+    await Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
+      return new SystemTreeContentPageUI(new ValueKey(itemData));
+    }));
+  }
+
   Widget _renderRow(BuildContext context, int index) {
 
     if (index < _datas.length) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Expanded(
-              child: Container(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      padding: EdgeInsets.only(bottom: 8),
-                      child: Text(_datas[index].name,
-                        style: TextStyle(fontSize: 16),
-                        textAlign: TextAlign.left,
+      return InkWell(
+        onTap: (){
+          _onItemClick(_datas[index]);
+        },
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Expanded(
+                child: Container(
+                  padding: EdgeInsets.all(16),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        padding: EdgeInsets.only(bottom: 8),
+                        child: Text(_datas[index].name,
+                          style: TextStyle(fontSize: 16),
+                          textAlign: TextAlign.left,
+                        ),
                       ),
-                    ),
 
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      child: buildChildren(_datas[index].children)
-                    ),
+                      Container(
+                          alignment: Alignment.centerLeft,
+                          child: buildChildren(_datas[index].children)
+                      ),
 
-                  ],
-                ),
-              )
-          ),
+                    ],
+                  ),
+                )
+            ),
 
-          Icon(Icons.chevron_right)
+            Icon(Icons.chevron_right)
 
 
-        ],
+          ],
+        ),
       );
     }
   }
+
+
+
 
 
   Widget buildChildren(List<SystemTreeChild> children) {
