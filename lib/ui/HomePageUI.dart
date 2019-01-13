@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import '../model/ArticleModel.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
-
-import '../model/BannerModel.dart';
 import '../utils/timeline_util.dart';
-import 'WebViewPageUI.dart';
+import '../utils/RouteUtil.dart';
+import '../widget/BannerWidgetUI.dart';
 import 'SearchPageUI.dart';
 import 'DrawerWidgetUI.dart';
-///
+
 /// 首页
-///
 class HomePageUI extends StatefulWidget{
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return HomePageUIState();
   }
 
@@ -37,7 +33,6 @@ class HomePageUIState extends State<HomePageUI> with AutomaticKeepAliveClientMix
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
         print('滑动到了最底部');
-
         _getMore();
       }
     });
@@ -89,23 +84,20 @@ class HomePageUIState extends State<HomePageUI> with AutomaticKeepAliveClientMix
   }
 
   Widget _renderRow(BuildContext context, int index) {
-//    if(_datas.length == 0){
-//      return();
-//    }
     if(index == 0){
       return Container(
         height: 200,
         color: Colors.purple,
-        child: SwiperPage(),
+        child: BannerWidgetUI(),
       );
     }
   
     if (index-1 < _datas.length) {
-      return GestureDetector(
-        onTap: (){
-          //条目点击事件
-          onItemClick(_datas[index-1]);
+      return new InkWell(
+        onTap: () {
+          RouteUtil.toWebView(context, _datas[index-1].title, _datas[index-1].link);
         },
+
         child: Column(
           children: <Widget>[
             Container(
@@ -156,20 +148,10 @@ class HomePageUIState extends State<HomePageUI> with AutomaticKeepAliveClientMix
             ),
 
           ],
-        )
+        ),
       );
-
     }
     return _getMoreWidget();
-  }
-
-  void onItemClick(Article itemData) async {
-    await Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
-      return new WebViewPageUI(
-        title: itemData.title,
-        url: itemData.link,
-      );
-    }));
   }
 
   void onSearchClick() async {
@@ -215,82 +197,3 @@ class HomePageUIState extends State<HomePageUI> with AutomaticKeepAliveClientMix
 }
 
 
-
-
-
-
-
-class SwiperPage extends StatefulWidget {
-  @override
-  SwiperPageState createState() {
-    return SwiperPageState();
-  }
-}
-
-class SwiperPageState extends State<SwiperPage> {
-  Dio dio;
-  List<BannerData> _bannerList  = new List();
-
-  @override
-  void initState() {
-    dio = new Dio();
-    _bannerList.add(null);
-    _getBanner();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return RefreshSafeArea(
-      child: new Swiper(
-        itemHeight: 100,
-        itemBuilder: (BuildContext context,int index){
-          if(_bannerList[index] == null || _bannerList[index].imagePath == null){
-            return new Container(color: Colors.grey[100],);
-          }else{
-            return new Image.network(_bannerList[index].imagePath,fit: BoxFit.fill,);
-          }
-
-        },
-        itemCount: _bannerList.length,
-        autoplay: true,
-        pagination: new SwiperPagination(),
-      ),
-    ) ;
-
-  }
-
-
-  Future<Null> _getBanner() async{
-    Response response = await dio.get("http://www.wanandroid.com/banner/json");
-    var bannerModel = new BannerModel(response.data);
-    _bannerList = bannerModel.data;
-//    _bannerList.addAll(bannerModel.data);
-
-    setState(() {
-
-    });
-  }
-
-
-
-}
-class RefreshSafeArea extends StatelessWidget{
-  final Widget child;
-
-  // 构造函数
-  RefreshSafeArea({
-    Key key,
-    @required this.child,
-  }): super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return NotificationListener(
-      onNotification: (ScrollNotification notification) {
-        return true;
-      },
-      child: this.child,
-    );
-  }
-}
