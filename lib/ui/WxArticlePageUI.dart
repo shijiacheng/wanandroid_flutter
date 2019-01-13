@@ -17,7 +17,7 @@ class WxArticlePageUI extends StatefulWidget {
 }
 
 
-class _MyTabbedPageState extends State<WxArticlePageUI> with SingleTickerProviderStateMixin {
+class _MyTabbedPageState extends State<WxArticlePageUI> with TickerProviderStateMixin {
 
   Future<Null> getData() async{
     Response response = await dio.get("http://wanandroid.com/wxarticle/chapters/json");
