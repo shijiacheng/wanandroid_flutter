@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
-import 'dart:async';
-import 'dart:io';
 import 'package:dio/dio.dart';
 import '../model/WxArticleTitleModel.dart';
 import '../model/WxArticleContentModel.dart';
 import '../utils/timeline_util.dart';
+import '../utils/RouteUtil.dart';
 
 class WxArticlePageUI extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _MyTabbedPageState();
   }
-
 }
 
 
@@ -26,7 +22,6 @@ class _MyTabbedPageState extends State<WxArticlePageUI> with TickerProviderState
       _datas = articleTitleModel.data;
     });
   }
-
 
   //将每个Tab页都结构化处理下，由于http的请求需要传入新闻类型的参数，因此将新闻类型参数值作为对象属性传入Tab中
   List<WxArticleTitleData> _datas = new List();
@@ -132,9 +127,6 @@ class _NewsListState extends State<NewsList>{
   }
 
   Widget _renderRow(BuildContext context, int index) {
-//    if(_datas.length == 0){
-//      return();
-//    }
 
     if (index < _datas.length) {
       return _newsRow(_datas[index]);
@@ -144,39 +136,42 @@ class _NewsListState extends State<NewsList>{
 
   //新闻列表单个item
   Widget _newsRow(WxArticleContentDatas item){
-    return new Card(
+    return InkWell(
+      onTap: (){
+        RouteUtil.toWebView(context, item.title, item.link);
+      },
+      child: new Card(
+        child: new Column(
+          children: <Widget>[
+            Container(
+                padding: EdgeInsets.fromLTRB(16,8,16,8),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                        child: Text(item.title,
+                          style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.left,
+                        )
+                    )
+                  ],
+                )
+            ),
 
-      child: new Column(
-        children: <Widget>[
-
-          Container(
-              padding: EdgeInsets.fromLTRB(16,8,16,8),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                      child: Text(item.title,
-                        style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.left,
-                      )
-                  )
-                ],
-              )
-          ),
-
-          new Container(
-              padding: EdgeInsets.fromLTRB(16,0,16,8),
-              child:new Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  new Expanded(
-                    child: new Text(TimelineUtil.format(item.publishTime),
-                      style: TextStyle(fontSize: 12,color: Colors.grey),
+            new Container(
+                padding: EdgeInsets.fromLTRB(16,0,16,8),
+                child:new Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    new Expanded(
+                      child: new Text(TimelineUtil.format(item.publishTime),
+                        style: TextStyle(fontSize: 12,color: Colors.grey),
+                      ),
                     ),
-                  ),
-                ],
-              )),
+                  ],
+                )),
 
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -209,13 +204,8 @@ class _NewsListState extends State<NewsList>{
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _scrollController.dispose();
   }
-
-
-
-
 
 }
