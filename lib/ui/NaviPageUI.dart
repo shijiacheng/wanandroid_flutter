@@ -98,7 +98,7 @@ class NaviPageUIState extends State<NaviPageUI>{
     Widget content; //单独一个widget组件，用于返回需要生成的内容widget
     for(var item in children) {
       tiles.add(
-        new GestureDetector(
+        new InkWell(
           child:  new Chip(
             label: new Text(item.title),
           ),
