@@ -5,10 +5,63 @@ import './ui/SystemTreeUI.dart';
 import './ui/WxArticlePageUI.dart';
 import './ui/ProjectTreePageUI.dart';
 import './ui/NaviPageUI.dart';
+import 'GlobalConfig.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'event/theme_change_event.dart';
+import 'common/Application.dart';
+import 'package:event_bus/event_bus.dart';
 
-void main() => runApp(MyApp());
+//void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget{
+void main() async {
+  bool themeIndex = await getTheme();
+  runApp(MyApp(themeIndex));
+}
+
+Future<bool> getTheme() async {
+  SharedPreferences sp = await SharedPreferences.getInstance();
+  bool themeIndex = sp.getBool("themeIndex");
+  return themeIndex;
+}
+
+class MyApp extends StatefulWidget{
+  final bool themeIndex;
+  MyApp(this.themeIndex);
+
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return MyAppState();
+  }
+
+}
+
+class MyAppState extends State<MyApp>{
+
+  ThemeData themeData;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Application.eventBus = EventBus();
+    themeData = GlobalConfig.getThemeData(widget.themeIndex);
+    this.registerThemeEvent();
+
+  }
+
+  void registerThemeEvent() {
+    Application.eventBus.on<ThemeChangeEvent>().listen((ThemeChangeEvent onData)=> this.changeTheme(onData));
+  }
+
+  void changeTheme(ThemeChangeEvent onData) {
+    setState(() {
+//      if(onData.dark){
+//      }
+      themeData = GlobalConfig.getThemeData(onData.dark);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -16,11 +69,16 @@ class MyApp extends StatelessWidget{
       title: "WanAndroid Flutter",
       debugShowCheckedModeBanner: false,
       home: Home(),
-      theme: ThemeData(
-        primarySwatch: Colors.purple,
-      ),
+      theme: themeData,
     );
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+    Application.eventBus.destroy();
+  }
+
 }
 
 class Home extends StatefulWidget{

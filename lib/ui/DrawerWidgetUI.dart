@@ -1,6 +1,19 @@
 import 'package:flutter/material.dart';
+import '../GlobalConfig.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../common/Application.dart';
+import '../event/theme_change_event.dart';
+import 'AboutAppPageUI.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
-class DrawerDemo extends StatelessWidget {
+class DrawerDemo extends StatefulWidget{
+  @override
+  State<StatefulWidget> createState() {
+    return DrawerDemoState();
+  }
+}
+
+class DrawerDemoState extends State<DrawerDemo> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -32,27 +45,57 @@ class DrawerDemo extends StatelessWidget {
               '夜间模式',
               textAlign: TextAlign.left,
             ),
-            leading: Icon(Icons.wb_sunny, color: Colors.black, size: 22.0),
-            onTap: () => Navigator.pop(context),
+            leading: Icon(Icons.wb_sunny, color: GlobalConfig.themeData.accentColor, size: 22.0),
+            onTap: () {
+              setState((){
+                if (GlobalConfig.dark == true) {
+                  GlobalConfig.dark = false;
+                } else {
+                  GlobalConfig.dark = true;
+                }
+
+                changeTheme();
+
+              });
+            },
           ),
           ListTile(
             title: Text(
               '设置',
               textAlign: TextAlign.left,
             ),
-            leading: Icon(Icons.settings, color: Colors.black, size: 22.0),
-            onTap: () => Navigator.pop(context),
+            leading: Icon(Icons.settings_applications, color: GlobalConfig.themeData.accentColor, size: 22.0),
+            onTap: () {
+//              Navigator.pop(context);
+              Fluttertoast.showToast(msg: "该功能暂未上线~");
+            },
           ),
           ListTile(
             title: Text(
-              '关于我',
+              '关于App',
               textAlign: TextAlign.left,
             ),
-            leading: Icon(Icons.perm_identity, color: Colors.black, size: 22.0),
-            onTap: () => Navigator.pop(context),
+            leading: Icon(Icons.people, color: GlobalConfig.themeData.accentColor, size: 22.0),
+            onTap: () {
+              onAboutClick();
+//              Navigator.pop(context);
+              Scaffold.of(context).openEndDrawer();
+            },
           ),
         ],
       ),
     );
+  }
+
+  void onAboutClick() async {
+    await Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
+      return new AboutAppPageUI();
+    }));
+  }
+
+  changeTheme() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    sp.setBool("themeIndex", GlobalConfig.dark);
+    Application.eventBus.fire(new ThemeChangeEvent(GlobalConfig.dark));
   }
 }
