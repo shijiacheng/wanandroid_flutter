@@ -30,7 +30,7 @@ class _BottomNavigationBarDemoState extends State<BottomNavigationBarDemo>  with
       currentIndex: _currentIndex,
       onTap: _onTapHandler,
       type: BottomNavigationBarType.fixed,
-      fixedColor: Colors.purple,
+      fixedColor: Colors.blue,
       items: [
         BottomNavigationBarItem(
           icon: Icon(Icons.home),

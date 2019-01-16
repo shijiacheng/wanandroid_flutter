@@ -48,14 +48,13 @@ class SystemTreeContentPageUIState extends State<SystemTreeContentPageUI> with T
     _tabController = new TabController(vsync: this, length: _datas.children.length);
     return new Scaffold(
       appBar: new AppBar(
-        backgroundColor: Colors.purple,
         title: Text(_datas.name),
         bottom: new TabBar(
           controller: _tabController,
           tabs: _datas.children.map((SystemTreeChild item){
             return Tab(text: item.name,);
           }).toList(),
-          indicatorColor: Colors.white,
+//          indicatorColor: Colors.white,
           isScrollable: true,   //水平滚动的开关，开启后Tab标签可自适应宽度并可横向拉动，关闭后每个Tab自动压缩为总长符合屏幕宽度的等宽，默认关闭
         ),
       ),
