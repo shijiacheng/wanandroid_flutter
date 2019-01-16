@@ -8,8 +8,6 @@ import '../utils/timeline_util.dart';
 class SearchResultPageUI extends StatefulWidget{
   String id;
 
-  //这里为什么用含有key的这个构造,大家可以试一下不带key 直接SearchListPage(this.id) ,看看会有什么bug;
-
   SearchResultPageUI(ValueKey<String> key) : super(key: key) {
     this.id = key.value.toString();
   }
@@ -76,7 +74,7 @@ class _NewsListState extends State<SearchResultPageUI>{
   }
 
   Widget _itemView(BuildContext context, int index) {
-    return GestureDetector(
+    return InkWell(
       child:_newsRow(_datas[index]),
       onTap: (){
         _onItemClick(_datas[index]);
@@ -104,25 +102,30 @@ class _NewsListState extends State<SearchResultPageUI>{
 
   //新闻列表单个item
   Widget _newsRow(Article item){
-    return new Row(
-      children: <Widget>[
-        Container(
-            padding: EdgeInsets.fromLTRB(8,16,8,8),
-            child: Image.network(item.envelopePic,width: 80,height: 120,fit: BoxFit.fill,)
-        ),
+//    return new Row(
+//      children: <Widget>[
+//        Container(
+//            padding: EdgeInsets.fromLTRB(8,16,8,8),
+//            child: Image.network(item.envelopePic,width: 80,height: 120,fit: BoxFit.fill,)
+//        ),
 
-        Expanded(
-          child: new Column(
+        return new Column(
             children: <Widget>[
               Container(
                   padding: EdgeInsets.fromLTRB(8,8,8,8),
                   child: Row(
                     children: <Widget>[
                       Expanded(
-                          child: Text(item.title,
-                            style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
-                            textAlign: TextAlign.left,
-                          )
+//                          child: Rich(item.title,
+//                            style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+//                            textAlign: TextAlign.left,
+//                          )
+                        child: RichText(text: TextSpan(
+                          text: item.title.replaceAll("<em class='highlight'>", "").replaceAll("<\/em>", ""),
+                          style: TextStyle(
+                              fontSize: 16,fontWeight: FontWeight.bold,color: Colors.black
+                          ),
+                        )),
                       )
                     ],
                   )
@@ -162,12 +165,12 @@ class _NewsListState extends State<SearchResultPageUI>{
                   )),
 
             ],
-          ),
-        ),
+//          ),
+//        ),
 
 
 
-      ],
+//      ],
 
     );
   }

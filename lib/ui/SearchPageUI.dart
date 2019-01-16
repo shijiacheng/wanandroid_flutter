@@ -16,6 +16,7 @@ class SearchPageUI extends StatefulWidget {
 
 class SearchPageState extends State<SearchPageUI> {
   TextEditingController _searchController = new TextEditingController();
+  FocusNode focusNode1 = new FocusNode();
 
   SearchResultPageUI _searchListPage;
   String searchStr ;
@@ -32,6 +33,7 @@ class SearchPageState extends State<SearchPageUI> {
 
 
   void changeContent(){
+    focusNode1.unfocus();
     setState(() {
       _searchListPage = new SearchResultPageUI(new ValueKey(_searchController.text));
     });
@@ -45,6 +47,7 @@ class SearchPageState extends State<SearchPageUI> {
         hintText: '搜索关键词',
         hintStyle: TextStyle(color: Colors.white70)
       ),
+      focusNode: focusNode1,
       controller: _searchController,
       style: TextStyle(color: Colors.white),
     );
