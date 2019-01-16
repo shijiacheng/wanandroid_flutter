@@ -16,11 +16,14 @@ class NaviPageUIState extends State<NaviPageUI>{
 
   List<NaviData> _naviTitles  = new List();
   Dio dio;
+  ScrollController _scrollController;
 
   @override
   void initState() {
     dio = new Dio();
+    _scrollController = new ScrollController();
     getData();
+
   }
 
   @override
@@ -28,18 +31,21 @@ class NaviPageUIState extends State<NaviPageUI>{
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(title: Text("导航"),),
-      body: Row(
+      /*body: Row(
         children: <Widget>[
-          Container(
+          *//*Container(
             width: 120,
             child: _leftListView(context),
             color: Colors.black12,
           ),
           Expanded(
             child: _rightListView(context),
-          )
-
+          )*//*
         ],
+      ),*/
+
+      body: Container(
+        child: _rightListView(context),
       ),
     );
   }
