@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import '../model/BannerModel.dart';
 import '../utils/RouteUtil.dart';
+import '../api/common_service.dart';
 
 class BannerWidgetUI extends StatefulWidget {
   @override
@@ -23,11 +24,12 @@ class BannerWidgetUIState extends State<BannerWidgetUI> {
   }
 
   Future<Null> _getBanner() async{
-    Response response = await _dio.get("http://www.wanandroid.com/banner/json");
-    var bannerModel = new BannerModel(response.data);
-    _bannerList = bannerModel.data;
-    setState(() {
-
+    CommonService().getBanner((BannerModel _bean) {
+      if (_bean.data.length > 0) {
+        setState(() {
+          _bannerList = _bean.data;
+        });
+      }
     });
   }
 
