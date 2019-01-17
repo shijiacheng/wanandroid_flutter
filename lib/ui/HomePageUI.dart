@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import '../model/ArticleModel.dart';
 import '../utils/timeline_util.dart';
-import '../utils/RouteUtil.dart';
+import '../utils/route_util.dart';
 import '../widget/BannerWidgetUI.dart';
 import 'SearchPageUI.dart';
 import 'DrawerWidgetUI.dart';

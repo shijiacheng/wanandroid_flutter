@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import '../model/BannerModel.dart';
-import '../utils/RouteUtil.dart';
+import '../utils/route_util.dart';
 import '../api/common_service.dart';
 
 class BannerWidgetUI extends StatefulWidget {

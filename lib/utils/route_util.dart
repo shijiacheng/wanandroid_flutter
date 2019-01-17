@@ -13,4 +13,11 @@ class RouteUtil{
       );
     }));
   }
+
+  // 
+  static Future push(BuildContext context, Widget widget) {
+    Future result = Navigator.push(
+        context, MaterialPageRoute(builder: (context) => widget));
+    return result;
+  }
 }
