@@ -21,6 +21,9 @@ void main() async {
 Future<bool> getTheme() async {
   SharedPreferences sp = await SharedPreferences.getInstance();
   bool themeIndex = sp.getBool("themeIndex");
+  if(themeIndex == null){
+    themeIndex = false;
+  }
   return themeIndex;
 }
 
@@ -30,7 +33,6 @@ class MyApp extends StatefulWidget{
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return MyAppState();
   }
 
@@ -42,7 +44,6 @@ class MyAppState extends State<MyApp>{
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Application.eventBus = EventBus();
     themeData = GlobalConfig.getThemeData(widget.themeIndex);
@@ -64,7 +65,6 @@ class MyAppState extends State<MyApp>{
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return MaterialApp(
       title: "WanAndroid Flutter",
       debugShowCheckedModeBanner: false,
@@ -95,7 +95,6 @@ class HomeState extends State<Home> with AutomaticKeepAliveClientMixin{
 
   @override
   void initState() {
-    // TODO: implement initState
     _pageList = [
       HomePageUI(),
       SystemTreeUI(),
