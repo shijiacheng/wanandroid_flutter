@@ -23,10 +23,10 @@ class SystemTreeUIState extends State<SystemTreeUI> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: new AppBar(
-        title: new Text("知识体系"),
-        elevation: 0.4,
-      ),
+      // appBar: new AppBar(
+      //   title: new Text("知识体系"),
+      //   elevation: 0.4,
+      // ),
       body: RefreshIndicator(
         onRefresh: _getData,
         child: ListView.separated(

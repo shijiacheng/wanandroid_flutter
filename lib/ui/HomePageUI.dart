@@ -61,17 +61,17 @@ class HomePageUIState extends State<HomePageUI> with AutomaticKeepAliveClientMix
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: new AppBar(
-        title: new Text("首页"),
-        elevation: 0.4,
-        actions: <Widget>[
-          new IconButton(
-              icon: new Icon(Icons.search),
-              onPressed: () {
-                onSearchClick();
-              })
-        ],
-      ),
+      // appBar: new AppBar(
+      //   title: new Text("首页"),
+      //   elevation: 0.4,
+      //   actions: <Widget>[
+      //     new IconButton(
+      //         icon: new Icon(Icons.search),
+      //         onPressed: () {
+      //           onSearchClick();
+      //         })
+      //   ],
+      // ),
 
       body: RefreshIndicator(
         onRefresh: getData,

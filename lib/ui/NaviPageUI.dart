@@ -22,22 +22,10 @@ class NaviPageUIState extends State<NaviPageUI> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("导航"),
-        elevation: 0.4,
-      ),
-      /*body: Row(
-        children: <Widget>[
-          */ /*Container(
-            width: 120,
-            child: _leftListView(context),
-            color: Colors.black12,
-          ),
-          Expanded(
-            child: _rightListView(context),
-          )*/ /*
-        ],
-      ),*/
+      // appBar: AppBar(
+      //   title: Text("导航"),
+      //   elevation: 0.4,
+      // ),
 
       body: Container(
         child: _rightListView(context),
