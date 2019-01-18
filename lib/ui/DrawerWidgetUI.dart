@@ -6,7 +6,7 @@ import '../event/theme_change_event.dart';
 import 'AboutAppPageUI.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class DrawerDemo extends StatefulWidget{
+class DrawerDemo extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return DrawerDemoState();
@@ -16,27 +16,25 @@ class DrawerDemo extends StatefulWidget{
 class DrawerDemoState extends State<DrawerDemo> {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
           UserAccountsDrawerHeader(
-            accountName:
-            Text('shijiacheng', style: TextStyle(fontWeight: FontWeight.bold)),
+            accountName: Text('shijiacheng',
+                style: TextStyle(fontWeight: FontWeight.bold)),
             accountEmail: Text('iot_shijiacheng@163.com'),
             currentAccountPicture: CircleAvatar(
-              backgroundImage: NetworkImage(
-                  'http://life.southmoney.com/tuwen/UploadFiles_6871/201808/20180828134237360.jpg'),
+              backgroundImage: AssetImage('images/avatar.jpg'),
             ),
             decoration: BoxDecoration(
-              color: Colors.yellow[400],
+              color: Colors.grey[800],
               image: DecorationImage(
-                image: NetworkImage(
-                    'http://www.jituwang.com/uploads/allimg/130206/260506-13020619115780.jpg'),
+                image: AssetImage(
+                  GlobalConfig.dark?'images/bg_dark.png':'images/bg_light.jpg'),
                 fit: BoxFit.cover,
                 colorFilter: ColorFilter.mode(
-                    Colors.yellow[400].withOpacity(0.6), BlendMode.hardLight),
+                    Colors.grey[800].withOpacity(0.6), BlendMode.hardLight),
               ),
             ),
           ),
@@ -45,9 +43,10 @@ class DrawerDemoState extends State<DrawerDemo> {
               '夜间模式',
               textAlign: TextAlign.left,
             ),
-            leading: Icon(Icons.wb_sunny, color: GlobalConfig.themeData.accentColor, size: 22.0),
+            leading: Icon(Icons.wb_sunny,
+                color: GlobalConfig.themeData.accentColor, size: 22.0),
             onTap: () {
-              setState((){
+              setState(() {
                 if (GlobalConfig.dark == true) {
                   GlobalConfig.dark = false;
                 } else {
@@ -55,7 +54,6 @@ class DrawerDemoState extends State<DrawerDemo> {
                 }
 
                 changeTheme();
-
               });
             },
           ),
@@ -64,7 +62,8 @@ class DrawerDemoState extends State<DrawerDemo> {
               '设置',
               textAlign: TextAlign.left,
             ),
-            leading: Icon(Icons.settings_applications, color: GlobalConfig.themeData.accentColor, size: 22.0),
+            leading: Icon(Icons.settings_applications,
+                color: GlobalConfig.themeData.accentColor, size: 22.0),
             onTap: () {
 //              Navigator.pop(context);
               Fluttertoast.showToast(msg: "该功能暂未上线~");
@@ -75,10 +74,10 @@ class DrawerDemoState extends State<DrawerDemo> {
               '关于App',
               textAlign: TextAlign.left,
             ),
-            leading: Icon(Icons.people, color: GlobalConfig.themeData.accentColor, size: 22.0),
+            leading: Icon(Icons.people,
+                color: GlobalConfig.themeData.accentColor, size: 22.0),
             onTap: () {
               onAboutClick();
-//              Navigator.pop(context);
               Scaffold.of(context).openEndDrawer();
             },
           ),
