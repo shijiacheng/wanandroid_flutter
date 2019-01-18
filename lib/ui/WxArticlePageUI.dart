@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
 import '../model/WxArticleTitleModel.dart';
 import '../model/WxArticleContentModel.dart';
 import '../utils/timeline_util.dart';
 import '../utils/route_util.dart';
+import '../api/common_service.dart';
 
 class WxArticlePageUI extends StatefulWidget {
   @override
@@ -15,26 +15,22 @@ class WxArticlePageUI extends StatefulWidget {
 
 class _MyTabbedPageState extends State<WxArticlePageUI> with TickerProviderStateMixin {
 
-  Future<Null> getData() async{
-    Response response = await dio.get("http://wanandroid.com/wxarticle/chapters/json");
-    var articleTitleModel = new WxArticleTitleModel(response.data);
-    setState(() {
-      _datas = articleTitleModel.data;
-    });
-  }
-
-  //将每个Tab页都结构化处理下，由于http的请求需要传入新闻类型的参数，因此将新闻类型参数值作为对象属性传入Tab中
   List<WxArticleTitleData> _datas = new List();
-
   TabController _tabController;
-  Dio dio;
+
+  Future<Null> _getData() async{
+    CommonService().getWxList((WxArticleTitleModel _articleTitleModel){
+      setState(() {
+        _datas = _articleTitleModel.data;
+      });
+    });
+
+  }
 
   @override
   void initState() {
     super.initState();
-    dio = new Dio();
-    getData();
-//    _tabController = new TabController(vsync: this, length: _datas.length);
+    _getData();
   }
 
   @override
@@ -48,73 +44,75 @@ class _MyTabbedPageState extends State<WxArticlePageUI> with TickerProviderState
     _tabController = new TabController(vsync: this, length: _datas.length);
     return new Scaffold(
       appBar: new AppBar(
+        elevation: 0.4,
         title: new TabBar(
           controller: _tabController,
           tabs: _datas.map((WxArticleTitleData item){
             return Tab(text: item.name,);
           }).toList(),
-//          indicatorColor: Colors.white,
           isScrollable: true,   //水平滚动的开关，开启后Tab标签可自适应宽度并可横向拉动，关闭后每个Tab自动压缩为总长符合屏幕宽度的等宽，默认关闭
         ),
       ),
       body: new TabBarView(
         controller: _tabController,
         children: _datas.map((item) {
-          return NewsList(idsss: item.id,);
+          return NewsList(id: item.id,);
         }).toList(),
       ),
     );
   }
 }
 
-//新闻列表
 class NewsList extends StatefulWidget{
-  final int idsss;    //新闻类型
+  final int id; 
   @override
-  NewsList({Key key, this.idsss} ):super(key:key);
+  NewsList({Key key, this.id} ):super(key:key);
 
   _NewsListState createState() => new _NewsListState();
 }
 
 class _NewsListState extends State<NewsList>{
-
   List<WxArticleContentDatas> _datas  = new List();
   ScrollController _scrollController = ScrollController(); //listview的控制器
   int _page = 1; //加载的页数
 
-  Dio dio;
-
   @override
   void initState() {
-    dio = new Dio();
-    getData();
+    super.initState();
+    _getData();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
-        print('滑动到了最底部');
-
         _getMore();
       }
     });
   }
 
-
-  Future<Null> getData() async{
+  Future<Null> _getData() async{
     _page = 1;
-    print("$widget.idsss");
-    int _id = widget.idsss;
-    Response response = await dio.get("http://wanandroid.com/wxarticle/list/$_id/$_page/json");
-    var articleContentModel = new WxArticleContentModel(response.data);
-    setState(() {
-      _datas = articleContentModel.data.datas;
-    });
+    int _id = widget.id;
+    CommonService().getWxArticleList((WxArticleContentModel _articleContentModel){
+      setState(() {
+        _datas = _articleContentModel.data.datas;
+      });
+    }, _id, _page);
+  }
+
+  Future<Null> _getMore() async{
+    _page++;
+    int _id = widget.id;
+    CommonService().getWxArticleList((WxArticleContentModel _articleContentModel){
+      setState(() {
+        _datas.addAll(_articleContentModel.data.datas);
+      });
+    }, _id, _page);
   }
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       body: RefreshIndicator(
-        onRefresh: getData,
+        onRefresh: _getData,
         child: ListView.builder(
           padding: const EdgeInsets.all(16.0),
           itemBuilder: _renderRow,
@@ -126,14 +124,12 @@ class _NewsListState extends State<NewsList>{
   }
 
   Widget _renderRow(BuildContext context, int index) {
-
     if (index < _datas.length) {
       return _newsRow(_datas[index]);
     }
     return _getMoreWidget();
   }
 
-  //新闻列表单个item
   Widget _newsRow(WxArticleContentDatas item){
     return InkWell(
       onTap: (){
@@ -175,20 +171,6 @@ class _NewsListState extends State<NewsList>{
     );
   }
 
-  Future<Null> _getMore() async{
-    _page++;
-    print("$_page");
-    int _id = widget.idsss;
-    Response response = await dio.get("http://wanandroid.com/wxarticle/list/$_id/$_page/json");
-    var articleContentModel = new WxArticleContentModel(response.data);
-    setState(() {
-      _datas.addAll(articleContentModel.data.datas);
-    });
-  }
-
-//  /**
-//   * 加载更多时显示的组件,给用户提示
-//   */
   Widget _getMoreWidget() {
     return Container(
       padding: EdgeInsets.all(16),

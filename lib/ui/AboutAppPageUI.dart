@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import '../utils/route_util.dart';
 
 /// 关于APP页面
 class AboutAppPageUI extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
-      appBar: AppBar(title: Text("关于App"),),
+      appBar: AppBar(
+        title: Text("关于App"),
+        elevation: 0.4,
+      ),
       body: Scrollbar(
           child: SingleChildScrollView(
             child: Column(
@@ -49,11 +52,14 @@ class AboutAppPageUI extends StatelessWidget{
                 ),
                 ListTile(
                   title: Text("更新日志"),
-                  subtitle: Text("release"),
+                  subtitle: Text("暂无"),
                 ),
                 ListTile(
                   title: Text("源代码"),
                   subtitle: Text("https://github.com/shijiacheng/wanandroid_flutter"),
+                  onTap: (){
+                    RouteUtil.toWebView(context, "github.com/shijiacheng", "https://github.com/shijiacheng/wanandroid_flutter");
+                  },
                 ),
                 ListTile(
                   title: Text("版权声明"),

@@ -3,14 +3,13 @@ import 'SearchHotPageUI.dart';
 import 'SearchResultPageUI.dart';
 
 class SearchPageUI extends StatefulWidget {
-
   String searchStr;
 
   SearchPageUI(this.searchStr);
 
   @override
   State<StatefulWidget> createState() {
-    return new SearchPageState(searchStr);
+    return SearchPageState(searchStr);
   }
 }
 
@@ -19,7 +18,7 @@ class SearchPageState extends State<SearchPageUI> {
   FocusNode focusNode1 = new FocusNode();
 
   SearchResultPageUI _searchListPage;
-  String searchStr ;
+  String searchStr;
   SearchPageState(this.searchStr);
 
   @override
@@ -30,14 +29,14 @@ class SearchPageState extends State<SearchPageUI> {
     changeContent();
   }
 
-
-
-  void changeContent(){
+  void changeContent() {
     focusNode1.unfocus();
     setState(() {
-      _searchListPage = new SearchResultPageUI(new ValueKey(_searchController.text));
+      _searchListPage =
+          new SearchResultPageUI(new ValueKey(_searchController.text));
     });
   }
+
   @override
   Widget build(BuildContext context) {
     TextField searchField = new TextField(
@@ -45,18 +44,14 @@ class SearchPageState extends State<SearchPageUI> {
       decoration: new InputDecoration(
         border: InputBorder.none,
         hintText: '搜索关键词',
-        hintStyle: TextStyle(color: Colors.white70)
       ),
       focusNode: focusNode1,
       controller: _searchController,
-      style: TextStyle(color: Colors.white),
     );
-
-
-
 
     return new Scaffold(
       appBar: new AppBar(
+        elevation: 0.4,
         title: searchField,
         actions: <Widget>[
           new IconButton(
@@ -70,17 +65,17 @@ class SearchPageState extends State<SearchPageUI> {
                 setState(() {
                   _searchController.clear();
                 });
-
               }),
         ],
       ),
-      body: (_searchController.text==null||_searchController.text.isEmpty)?new Center(
-        child:new  SearchHotPageUI(),
-      ):_searchListPage,
+      body: (_searchController.text == null || _searchController.text.isEmpty)
+          ? new Center(
+              child: new SearchHotPageUI(),
+            )
+          : _searchListPage,
 //    body: Center(
 //      child: SearchHotPageUI(),
 //    ),
-
     );
   }
 }

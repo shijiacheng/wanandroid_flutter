@@ -7,8 +7,11 @@ class WebViewPageUI extends StatefulWidget {
   //链接
   String url;
 
-  WebViewPageUI({Key key, @required this.title, @required this.url,})
-      : super(key: key);
+  WebViewPageUI({
+    Key key,
+    @required this.title,
+    @required this.url,
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -17,7 +20,6 @@ class WebViewPageUI extends StatefulWidget {
 }
 
 class WebViewPageUIState extends State<WebViewPageUI> {
-
   bool isLoad = true;
 
   final flutterWebViewPlugin = new FlutterWebviewPlugin();
@@ -29,9 +31,13 @@ class WebViewPageUIState extends State<WebViewPageUI> {
       debugPrint('state:_' + state.type.toString());
       if (state.type == WebViewState.finishLoad) {
         // 加载完成
-        setState(() {isLoad = false;});
+        setState(() {
+          isLoad = false;
+        });
       } else if (state.type == WebViewState.startLoad) {
-        setState(() {isLoad = true;});
+        setState(() {
+          isLoad = true;
+        });
       }
     });
   }
@@ -41,15 +47,16 @@ class WebViewPageUIState extends State<WebViewPageUI> {
     return new WebviewScaffold(
       url: widget.url,
       appBar: new AppBar(
+        elevation: 0.4,
         title: new Text(widget.title),
         bottom: new PreferredSize(
             preferredSize: const Size.fromHeight(1.0),
             child: isLoad
                 ? new LinearProgressIndicator()
                 : new Divider(
-              height: 0.1,
-              color: Theme.of(context).primaryColor,
-            )),
+                    height: 1.0,
+                    color: Theme.of(context).primaryColor,
+                  )),
       ),
       withZoom: false,
       withLocalStorage: true,

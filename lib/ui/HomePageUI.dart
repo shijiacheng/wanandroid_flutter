@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
 import '../model/ArticleModel.dart';
 import '../utils/timeline_util.dart';
 import '../utils/route_util.dart';
 import '../widget/BannerWidgetUI.dart';
 import 'SearchPageUI.dart';
 import 'DrawerWidgetUI.dart';
+import '../api/common_service.dart';
 
 /// 首页
 class HomePageUI extends StatefulWidget{
@@ -22,12 +22,9 @@ class HomePageUIState extends State<HomePageUI> with AutomaticKeepAliveClientMix
   ScrollController _scrollController = ScrollController(); //listview的控制器
   int _page = 0; //加载的页数
 
-
-  Dio dio;
-
   @override
   void initState() {
-    dio = new Dio();
+    super.initState();
     getData();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
@@ -42,11 +39,23 @@ class HomePageUIState extends State<HomePageUI> with AutomaticKeepAliveClientMix
   Future<Null> getData() async{
     _page = 0;
     print("$_page");
-    Response response = await dio.get("http://www.wanandroid.com/article/list/$_page/json");
-    var articleModel = new ArticleModel(response.data);
-    setState(() {
-      _datas = articleModel.data.datas;
-    });
+
+    CommonService().getArticleList((ArticleModel _articleModel){
+      setState(() {
+        _datas = _articleModel.data.datas;
+      });
+    }, _page);
+  }
+
+   Future<Null> _getMore() async{
+    _page++;
+    print("$_page");
+    
+    CommonService().getArticleList((ArticleModel _articleModel){
+      setState(() {
+        _datas.addAll(_articleModel.data.datas);
+      });
+    }, _page);
   }
 
   @override
@@ -54,7 +63,7 @@ class HomePageUIState extends State<HomePageUI> with AutomaticKeepAliveClientMix
     return new Scaffold(
       appBar: new AppBar(
         title: new Text("首页"),
-        elevation: 0.0,
+        elevation: 0.4,
         actions: <Widget>[
           new IconButton(
               icon: new Icon(Icons.search),
@@ -160,19 +169,9 @@ class HomePageUIState extends State<HomePageUI> with AutomaticKeepAliveClientMix
     }));
   }
 
-  Future<Null> _getMore() async{
-    _page++;
-    print("$_page");
-    Response response = await dio.get("http://www.wanandroid.com/article/list/$_page/json");
-    var articleModel = new ArticleModel(response.data);
-    setState(() {
-      _datas.addAll(articleModel.data.datas);
-    });
-  }
+ 
 
-//  /**
-//   * 加载更多时显示的组件,给用户提示
-//   */
+  /// 加载更多时显示的组件,给用户提示
   Widget _getMoreWidget() {
     return Container(
       padding: EdgeInsets.all(16),
@@ -187,7 +186,6 @@ class HomePageUIState extends State<HomePageUI> with AutomaticKeepAliveClientMix
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _scrollController.dispose();
   }

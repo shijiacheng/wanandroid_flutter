@@ -11,8 +11,6 @@ import 'event/theme_change_event.dart';
 import 'common/Application.dart';
 import 'package:event_bus/event_bus.dart';
 
-//void main() => runApp(MyApp());
-
 void main() async {
   bool themeIndex = await getTheme();
   runApp(MyApp(themeIndex));
@@ -21,13 +19,13 @@ void main() async {
 Future<bool> getTheme() async {
   SharedPreferences sp = await SharedPreferences.getInstance();
   bool themeIndex = sp.getBool("themeIndex");
-  if(themeIndex == null){
+  if (themeIndex == null) {
     themeIndex = false;
   }
   return themeIndex;
 }
 
-class MyApp extends StatefulWidget{
+class MyApp extends StatefulWidget {
   final bool themeIndex;
   MyApp(this.themeIndex);
 
@@ -35,11 +33,9 @@ class MyApp extends StatefulWidget{
   State<StatefulWidget> createState() {
     return MyAppState();
   }
-
 }
 
-class MyAppState extends State<MyApp>{
-
+class MyAppState extends State<MyApp> {
   ThemeData themeData;
 
   @override
@@ -48,17 +44,16 @@ class MyAppState extends State<MyApp>{
     Application.eventBus = EventBus();
     themeData = GlobalConfig.getThemeData(widget.themeIndex);
     this.registerThemeEvent();
-
   }
 
   void registerThemeEvent() {
-    Application.eventBus.on<ThemeChangeEvent>().listen((ThemeChangeEvent onData)=> this.changeTheme(onData));
+    Application.eventBus
+        .on<ThemeChangeEvent>()
+        .listen((ThemeChangeEvent onData) => this.changeTheme(onData));
   }
 
   void changeTheme(ThemeChangeEvent onData) {
     setState(() {
-//      if(onData.dark){
-//      }
       themeData = GlobalConfig.getThemeData(onData.dark);
     });
   }
@@ -78,23 +73,22 @@ class MyAppState extends State<MyApp>{
     super.dispose();
     Application.eventBus.destroy();
   }
-
 }
 
-class Home extends StatefulWidget{
+class Home extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return new HomeState();
   }
-
 }
 
-class HomeState extends State<Home> with AutomaticKeepAliveClientMixin{
-  int  _index = 0;
+class HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
+  int _index = 0;
   var _pageList;
 
   @override
   void initState() {
+    super.initState();
     _pageList = [
       HomePageUI(),
       SystemTreeUI(),
@@ -110,17 +104,11 @@ class HomeState extends State<Home> with AutomaticKeepAliveClientMixin{
     });
   }
 
-
-
-
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
         length: 5,
         child: Scaffold(
-//          body: _pageList[_index],
-
           body: IndexedStack(
             index: _index,
             children: _pageList,
@@ -130,14 +118,9 @@ class HomeState extends State<Home> with AutomaticKeepAliveClientMixin{
             index: _index,
             onChanged: _handleTabChanged,
           ),
-        )
-    );
+        ));
   }
-
 
   @override
   bool get wantKeepAlive => true;
 }
-
-
-

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
 import '../model/ArticleModel.dart';
 import 'WebViewPageUI.dart';
 import '../utils/timeline_util.dart';
+import '../api/common_service.dart';
 
-//新闻列表
-class SearchResultPageUI extends StatefulWidget{
+/// 搜索结果
+class SearchResultPageUI extends StatefulWidget {
   String id;
 
   SearchResultPageUI(ValueKey<String> key) : super(key: key) {
@@ -15,46 +15,48 @@ class SearchResultPageUI extends StatefulWidget{
   _NewsListState createState() => new _NewsListState();
 }
 
-class _NewsListState extends State<SearchResultPageUI>{
-
-  List<Article> _datas  = new List();
+class _NewsListState extends State<SearchResultPageUI> {
+  List<Article> _datas = new List();
   ScrollController _scrollController = ScrollController(); //listview的控制器
-  int _page = 1; //加载的页数
-
-  Dio dio;
+  int _page = 0; //加载的页数
 
   @override
   void initState() {
-    dio = new Dio();
-    getData();
+    super.initState();
+    _getData();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
-        print('滑动到了最底部');
-
         _getMore();
       }
     });
   }
 
+  Future<Null> _getData() async {
+    String str = widget.id;
+    _page = 0;
+    CommonService().getSearchResult((ArticleModel _articleModel) {
+      setState(() {
+        _datas = _articleModel.data.datas;
+      });
+    }, _page, str);
+  }
 
-  Future<Null> getData() async{
-
-    FormData formData = new FormData.from({
-      "k": widget.id,
-    });
-    Response response = await dio.post("http://www.wanandroid.com/article/query/$_page/json",data: formData);
-    var articleModel = new ArticleModel(response.data);
-    setState(() {
-      _datas = articleModel.data.datas;
-    });
+  Future<Null> _getMore() async {
+    _page++;
+    String str = widget.id;
+    CommonService().getSearchResult((ArticleModel _articleModel) {
+      setState(() {
+        _datas.addAll(_articleModel.data.datas);
+      });
+    }, _page, str);
   }
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       body: RefreshIndicator(
-        onRefresh: getData,
+        onRefresh: _getData,
         child: ListView.separated(
           padding: const EdgeInsets.all(16.0),
           itemBuilder: _renderRow,
@@ -68,15 +70,15 @@ class _NewsListState extends State<SearchResultPageUI>{
 
   Widget _renderRow(BuildContext context, int index) {
     if (index < _datas.length) {
-      return _itemView(context,index);
+      return _itemView(context, index);
     }
     return _getMoreWidget();
   }
 
   Widget _itemView(BuildContext context, int index) {
     return InkWell(
-      child:_newsRow(_datas[index]),
-      onTap: (){
+      child: _newsRow(_datas[index]),
+      onTap: () {
         _onItemClick(_datas[index]);
       },
     );
@@ -98,10 +100,7 @@ class _NewsListState extends State<SearchResultPageUI>{
     );
   }
 
-
-
-  //新闻列表单个item
-  Widget _newsRow(Article item){
+  Widget _newsRow(Article item) {
 //    return new Row(
 //      children: <Widget>[
 //        Container(
@@ -109,90 +108,65 @@ class _NewsListState extends State<SearchResultPageUI>{
 //            child: Image.network(item.envelopePic,width: 80,height: 120,fit: BoxFit.fill,)
 //        ),
 
-        return new Column(
-            children: <Widget>[
-              Container(
-                  padding: EdgeInsets.fromLTRB(8,8,8,8),
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
+    return new Column(
+      children: <Widget>[
+        Container(
+            padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
+            child: Row(
+              children: <Widget>[
+                Expanded(
 //                          child: Rich(item.title,
 //                            style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
 //                            textAlign: TextAlign.left,
 //                          )
-                        child: RichText(text: TextSpan(
-                          text: item.title.replaceAll("<em class='highlight'>", "").replaceAll("<\/em>", ""),
-                          style: TextStyle(
-                              fontSize: 16,fontWeight: FontWeight.bold,color: Colors.black
-                          ),
-                        )),
-                      )
-                    ],
-                  )
-              ),
-
-              Container(
-                  padding: EdgeInsets.fromLTRB(8,0,8,8),
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                          child: Text(item.desc,
-                            style: TextStyle(fontSize: 12,color: Colors.grey),
-                            textAlign: TextAlign.left,
-                            maxLines: 3,
-                          )
-                      )
-                    ],
-                  )
-              ),
-
-              new Container(
-                  padding: EdgeInsets.fromLTRB(8,0,8,8),
-                  child:new Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(item.author,
-                        style: TextStyle(fontSize: 12,color: Colors.grey),
-                      ),
-
-                      new Expanded(
-                        child: new Text(TimelineUtil.format(item.publishTime),
-                          style: TextStyle(fontSize: 12,color: Colors.grey),
-                          textAlign: TextAlign.right,
-                        ),
-                      ),
-                    ],
+                  child: RichText(
+                      text: TextSpan(
+                    text: item.title
+                        .replaceAll("<em class='highlight'>", "")
+                        .replaceAll("<\/em>", ""),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   )),
-
-            ],
+                )
+              ],
+            )),
+        Container(
+            padding: EdgeInsets.fromLTRB(8, 0, 8, 8),
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                    child: Text(
+                  item.desc,
+                  style: TextStyle(fontSize: 12),
+                  textAlign: TextAlign.left,
+                  maxLines: 3,
+                ))
+              ],
+            )),
+        new Container(
+            padding: EdgeInsets.fromLTRB(8, 0, 8, 8),
+            child: new Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  item.author,
+                  style: TextStyle(fontSize: 12),
+                ),
+                new Expanded(
+                  child: new Text(
+                    TimelineUtil.format(item.publishTime),
+                    style: TextStyle(fontSize: 12),
+                    textAlign: TextAlign.right,
+                  ),
+                ),
+              ],
+            )),
+      ],
 //          ),
 //        ),
-
-
-
 //      ],
-
     );
   }
 
-  Future<Null> _getMore() async{
-    _page++;
-    print("$_page");
-
-    FormData formData = new FormData.from({
-      "k": widget.id,
-    });
-    Response response = await dio.post("http://www.wanandroid.com/article/query/$_page/json",data: formData);
-    var articleModel = new ArticleModel(response.data);
-
-    setState(() {
-      _datas.addAll(articleModel.data.datas);
-    });
-  }
-
-//  /**
-//   * 加载更多时显示的组件,给用户提示
-//   */
   Widget _getMoreWidget() {
     return Container(
       padding: EdgeInsets.all(16),
@@ -200,20 +174,16 @@ class _NewsListState extends State<SearchResultPageUI>{
       child: SizedBox(
         width: 24,
         height: 24,
-        child: CircularProgressIndicator(strokeWidth: 2,),
+        child: CircularProgressIndicator(
+          strokeWidth: 2,
+        ),
       ),
     );
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _scrollController.dispose();
   }
-
-
-
-
-
 }
