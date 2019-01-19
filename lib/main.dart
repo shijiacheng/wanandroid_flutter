@@ -24,6 +24,7 @@ Future<bool> getTheme() async {
   if (themeIndex == null) {
     themeIndex = false;
   }
+  GlobalConfig.dark = themeIndex;
   return themeIndex;
 }
 
@@ -63,7 +64,7 @@ class MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "WanAndroid Flutter",
+      title: "玩Android",
       debugShowCheckedModeBanner: false,
       home: Home(),
       theme: themeData,
@@ -86,6 +87,7 @@ class Home extends StatefulWidget {
 
 class HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
   int _index = 0;
+  DateTime _lastPressedAt; //上次点击时间
   var _pageList;
   var _titleList = [
     "首页",
@@ -150,21 +152,46 @@ class HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-        length: 5,
-        child: Scaffold(
-          appBar: _showAppbar ? _appBarWidget(context) : null,
-          drawer: _showDrawer ? DrawerDemo() : null,
-          body: IndexedStack(
-            index: _index,
-            children: _pageList,
-          ),
-          bottomNavigationBar: BottomNavigationBarDemo(
-            index: _index,
-            onChanged: _handleTabChanged,
-          ),
-        ));
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: DefaultTabController(
+          length: 5,
+          child: Scaffold(
+            appBar: _showAppbar ? _appBarWidget(context) : null,
+            drawer: _showDrawer ? DrawerDemo() : null,
+            body: IndexedStack(
+              index: _index,
+              children: _pageList,
+            ),
+            bottomNavigationBar: BottomNavigationBarDemo(
+              index: _index,
+              onChanged: _handleTabChanged,
+            ),
+          )),
+    );
   }
+
+
+  Future<bool> _onWillPop() {
+    return showDialog(
+      context: context,
+      builder: (context) => new AlertDialog(
+        title: new Text('提示'),
+        content: new Text('确定退出应用吗？'),
+        actions: <Widget>[
+          new FlatButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: new Text('再看一会'),
+          ),
+          new FlatButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: new Text('退出'),
+          ),
+        ],
+      ),
+    ) ?? false;
+  }
+
 
   void onSearchClick() async {
     await Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
