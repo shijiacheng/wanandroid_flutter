@@ -2,7 +2,7 @@
 
 [![](https://img.shields.io/badge/platform-Flutter-blue.svg)](https://flutter.io/)[![](https://img.shields.io/badge/release-V0.1.0-brightgreen.svg)]()
 
-
+![](screenshot/ic_launcher.png)
 
 ## 前言
 
