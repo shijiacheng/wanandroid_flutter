@@ -124,7 +124,11 @@ class _NewsListState extends State<SearchResultPageUI> {
                     text: item.title
                         .replaceAll("<em class='highlight'>", "")
                         .replaceAll("<\/em>", ""),
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black
+                    ),
                   )),
                 )
               ],
