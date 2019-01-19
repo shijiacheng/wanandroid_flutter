@@ -119,17 +119,15 @@ class _NewsListState extends State<SearchResultPageUI> {
 //                            style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
 //                            textAlign: TextAlign.left,
 //                          )
-                  child: RichText(
-                      text: TextSpan(
-                    text: item.title
+                  child: Text(
+                    item.title
                         .replaceAll("<em class='highlight'>", "")
                         .replaceAll("<\/em>", ""),
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black
                     ),
-                  )),
+                  ),
                 )
               ],
             )),

@@ -40,7 +40,7 @@ class DrawerDemoState extends State<DrawerDemo> {
           ),
           ListTile(
             title: Text(
-              '夜间模式',
+              GlobalConfig.dark?'日间模式':'夜间模式',
               textAlign: TextAlign.left,
             ),
             leading: Icon(Icons.wb_sunny,
