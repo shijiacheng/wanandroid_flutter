@@ -29,7 +29,7 @@
 
 - 扫描二维码下载
 
-  ![](/Users/shijiacheng/Downloads/qrcode.png)
+  ![](http://wx3.sinaimg.cn/large/a62a5cffly1fzc62wijy5j2050050q3m.jpg)
 
 - 暂不支持IOS版本下载，请自行clone项目代码运行。
 
