@@ -1,6 +1,6 @@
 # 玩Android-Flutter客户端
 
-[![](https://img.shields.io/badge/platform-Flutter-blue.svg)](https://flutter.io/)[![](https://img.shields.io/badge/release-V0.1.0-brightgreen.svg)]()
+[![](https://img.shields.io/badge/platform-Flutter-blue.svg)](https://flutter.io/)[![](https://img.shields.io/badge/release-V0.1.0-brightgreen.svg)](https://github.com/shijiacheng/wanandroid_flutter/releases/tag/V0.1.0)
 
 ![](screenshot/ic_launcher.png)
 
@@ -14,7 +14,7 @@
 
 ## 更新日志
 
-### V0.1.0(2019-01-18)
+### V0.1.0_Release_(2019-01-19)
 
 - 完成首页、知识体系、公众号、导航、项目、搜索等各个页面。
 - 采用MD风格的设计，拥有较好的项目结构，比较规范的代码和封装。
@@ -25,8 +25,12 @@
 
 ## 下载
 
-- Android Apk下载：点击下载V0.1.0
+- Android Apk下载：[点击下载V0.1.0](https://github.com/shijiacheng/wanandroid_flutter/releases/download/V0.1.0/app-release.apk)
+
 - 扫描二维码下载
+
+  ![](/Users/shijiacheng/Downloads/qrcode.png)
+
 - 暂不支持IOS版本下载，请自行clone项目代码运行。
 
 
