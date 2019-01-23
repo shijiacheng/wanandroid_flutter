@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../common/Application.dart';
 import '../event/theme_change_event.dart';
 import 'AboutAppPageUI.dart';
+import './account/LoginPageUI.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class DrawerDemo extends StatefulWidget {
@@ -65,6 +66,7 @@ class DrawerDemoState extends State<DrawerDemo> {
             leading: Icon(Icons.settings_applications,
                 color: GlobalConfig.themeData.accentColor, size: 22.0),
             onTap: () {
+              onLoginClick();
 //              Navigator.pop(context);
               Fluttertoast.showToast(msg: "该功能暂未上线~");
             },
@@ -89,6 +91,12 @@ class DrawerDemoState extends State<DrawerDemo> {
   void onAboutClick() async {
     await Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
       return new AboutAppPageUI();
+    }));
+  }
+
+  void onLoginClick() async {
+    await Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
+      return new LoginPageUI();
     }));
   }
 
