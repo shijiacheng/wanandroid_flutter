@@ -83,6 +83,17 @@ class CommonService{
     });
   }
 
+  /// 获取搜索结果
+  void login(Function callback,String _username,String _password) async {
+    FormData formData = new FormData.from({
+      "username": _username,
+      "password":_password
+    });
+    DioManager.singleton.dio.post(Api.USER_LOGIN, data: formData, options: _getOptions()).then((response) {
+      callback(ArticleModel(response.data));
+    });
+  }
+
   Options _getOptions() {
     return null;
   }

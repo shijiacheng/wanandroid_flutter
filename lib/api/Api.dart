@@ -20,5 +20,7 @@ class Api{
   static final String SEARCH_HOT_WORD = "http://www.wanandroid.com//hotkey/json";
   // 搜索结果
   static final String SEARCH_RESULT = "http://www.wanandroid.com/article/query/";
+  // 用户登录
+  static const String USER_LOGIN = "http://www.wanandroid.com/user/login";
   
 }
