@@ -1,6 +1,40 @@
 import 'package:flutter/material.dart';
+import '../../api/common_service.dart';
+import '../../model/UserModel.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
-class RegisterPageUI extends StatelessWidget {
+class RegisterPageUI extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return RegisterPageUIState();
+  }
+}
+
+class RegisterPageUIState extends State<RegisterPageUI> {
+  TextEditingController _userNameController = TextEditingController();
+  TextEditingController _psdController = TextEditingController();
+  TextEditingController _psdAgainController = TextEditingController();
+
+  Future<Null> _register() async {
+    String username = _userNameController.text;
+    String password = _psdController.text;
+    String passwordAgain = _psdAgainController.text;
+    if (password != passwordAgain) {
+      Fluttertoast.showToast(msg: "两次密码输入不一致！");
+    } else {
+      CommonService().register((UserModel _userModel) {
+        if (_userModel != null) {
+          if (_userModel.errorCode == 0) {
+            Fluttertoast.showToast(msg: "注册成功！");
+            Navigator.of(context).pop();
+          } else {
+            Fluttertoast.showToast(msg: _userModel.errorMsg);
+          }
+        }
+      }, username, password);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,6 +68,7 @@ class RegisterPageUI extends StatelessWidget {
                 ),
                 TextField(
                   autofocus: true,
+                  controller: _userNameController,
                   decoration: InputDecoration(
                     labelText: "用户名",
                     hintText: "请输入用户名或邮箱",
@@ -43,6 +78,7 @@ class RegisterPageUI extends StatelessWidget {
                   maxLines: 1,
                 ),
                 TextField(
+                  controller: _psdController,
                   decoration: InputDecoration(
                       labelText: "密码",
                       labelStyle: TextStyle(color: Colors.blue),
@@ -52,6 +88,7 @@ class RegisterPageUI extends StatelessWidget {
                   maxLines: 1,
                 ),
                 TextField(
+                  controller: _psdAgainController,
                   decoration: InputDecoration(
                       labelText: "再次输入密码",
                       labelStyle: TextStyle(color: Colors.blue),
@@ -60,8 +97,6 @@ class RegisterPageUI extends StatelessWidget {
                   obscureText: true,
                   maxLines: 1,
                 ),
-
-
                 Padding(
                   padding: const EdgeInsets.only(top: 28.0),
                   child: Row(
@@ -73,13 +108,14 @@ class RegisterPageUI extends StatelessWidget {
                           child: Text("注册"),
                           color: Colors.blue,
                           textColor: Colors.white,
-                          onPressed: () {},
+                          onPressed: () {
+                            _register();
+                          },
                         ),
                       ),
                     ],
                   ),
                 ),
-                
               ],
             ),
           ),

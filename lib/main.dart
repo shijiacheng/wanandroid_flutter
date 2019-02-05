@@ -12,9 +12,11 @@ import 'event/theme_change_event.dart';
 import 'common/Application.dart';
 import './ui/SearchPageUI.dart';
 import 'package:event_bus/event_bus.dart';
+import './common/User.dart';
 
 void main() async {
   bool themeIndex = await getTheme();
+  getLoginInfo();
   runApp(MyApp(themeIndex));
 }
 
@@ -26,6 +28,10 @@ Future<bool> getTheme() async {
   }
   GlobalConfig.dark = themeIndex;
   return themeIndex;
+}
+
+Future<Null> getLoginInfo() async {
+  User.singleton.getUserInfo();
 }
 
 class MyApp extends StatefulWidget {
@@ -87,7 +93,6 @@ class Home extends StatefulWidget {
 
 class HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
   int _index = 0;
-  DateTime _lastPressedAt; //上次点击时间
   var _pageList;
   var _titleList = [
     "首页",
