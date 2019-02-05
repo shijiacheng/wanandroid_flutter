@@ -25,6 +25,7 @@ dependencies:
   shared_preferences: ^0.4.3
   fluttertoast: ^2.2.6
   event_bus: ^1.0.1
+  flutter_slidable: ^0.4.9
 
 
 dev_dependencies:
